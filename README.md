@@ -26,6 +26,14 @@ Clones the repo into `~/.briefcase/repos/<name>` and records it in the registry.
 briefcase list
 ```
 
+### Remove a repo
+
+```
+briefcase remove <name>
+```
+
+Removes the tool from the registry and deletes its cloned repo from `~/.briefcase/repos/`.
+
 ### Update a repo (git pull)
 
 ```
@@ -39,7 +47,7 @@ briefcase update --all
 briefcase new myproject --tool foo --tool bar
 ```
 
-Creates a project directory with this layout:
+Creates a project directory with this layout (using the `default` layout):
 
 ```
 myproject/
@@ -53,6 +61,53 @@ myproject/
 ```
 
 The generated `AGENT_CONTEXT.md` and `toolset.yaml` give a coding agent the context it needs to use the referenced repos.
+
+### Project layouts
+
+The `--layout` flag selects a project layout:
+
+```
+briefcase new myproject --tool foo --layout minimal
+```
+
+Built-in layouts:
+
+| Layout    | Directories    | Files                            |
+|-----------|---------------|----------------------------------|
+| `default` | src, tests    | toolset.yaml, AGENT_CONTEXT.md   |
+| `minimal` | (none)        | AGENT_CONTEXT.md                 |
+
+Both layouts create a `refs/` directory for tool symlinks.
+
+#### Custom layouts
+
+Place a YAML file in `~/.briefcase/layouts/` to define a custom layout:
+
+```yaml
+# ~/.briefcase/layouts/mylay.yaml
+dirs: [lib]
+refs_dir: refs
+files:
+  AGENT_CONTEXT.md: |
+    # {{ project_name }}
+    {% for tool in tools %}
+    - **{{ tool.name }}** — `{{ tool.rel_path }}`
+    {% endfor %}
+```
+
+Template variables: `{{ project_name }}`, `{{ tool.name }}`, `{{ tool.rel_path }}`, `{{ tool.notes }}`.
+
+A same-named file in `~/.briefcase/layouts/` overrides a built-in layout.
+
+#### Default layout config
+
+Set a global default in `~/.briefcase/config.yaml`:
+
+```yaml
+default_layout: minimal
+```
+
+The `--layout` CLI flag takes precedence over the config file.
 
 ### Custom home directory
 

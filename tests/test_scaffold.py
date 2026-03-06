@@ -52,6 +52,18 @@ def test_missing_tool_raises(tmp_registry):
         create_project("myproj", ["nonexistent"], home=tmp_registry)
 
 
+def test_symlink_with_subpath(tmp_registry):
+    _, repos_dir, _ = get_paths(tmp_registry)
+    # Create a repo with a subpath
+    (repos_dir / "mono" / "packages" / "foo").mkdir(parents=True)
+    add_tool("mono", "https://github.com/org/mono", subpath="packages/foo", home=tmp_registry)
+
+    project_dir = create_project("myproj", ["mono"], home=tmp_registry)
+    link = project_dir / "refs" / "mono"
+    assert link.is_symlink()
+    assert str(link.resolve()).endswith("mono/packages/foo")
+
+
 def test_generated_files_content(tmp_registry):
     project_dir = create_project("myproj", ["tool1"], home=tmp_registry)
     toolset = (project_dir / "toolset.yaml").read_text()
@@ -62,3 +74,24 @@ def test_generated_files_content(tmp_registry):
     assert "# myproj" in context
     assert "tool1" in context
     assert "Do not modify" in context
+
+
+def test_layout_default_explicit(tmp_registry):
+    project_dir = create_project("myproj", ["tool1"], home=tmp_registry, layout="default")
+    assert (project_dir / "src").is_dir()
+    assert (project_dir / "tests").is_dir()
+    assert (project_dir / "refs").is_dir()
+    assert (project_dir / "toolset.yaml").is_file()
+    assert (project_dir / "AGENT_CONTEXT.md").is_file()
+
+
+def test_layout_minimal(tmp_registry):
+    project_dir = create_project("myproj", ["tool1"], home=tmp_registry, layout="minimal")
+    assert (project_dir / "refs").is_dir()
+    assert (project_dir / "AGENT_CONTEXT.md").is_file()
+    assert "# myproj" in (project_dir / "AGENT_CONTEXT.md").read_text()
+    assert "tool1" in (project_dir / "AGENT_CONTEXT.md").read_text()
+    # minimal should NOT have src/, tests/, or toolset.yaml
+    assert not (project_dir / "src").exists()
+    assert not (project_dir / "tests").exists()
+    assert not (project_dir / "toolset.yaml").exists()
