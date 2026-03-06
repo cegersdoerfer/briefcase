@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "briefcase"
+version = "0.1.0"
+description = "CLI tool for maintaining a shared local registry of reusable GitHub repos and scaffolding new coding-agent projects."
+requires-python = ">=3.10"
+dependencies = [
+    "typer>=0.9",
+    "pyyaml>=6.0",
+    "rich>=13.0",
+]
+
+[project.scripts]
+briefcase = "briefcase.cli:app"
+
+[tool.setuptools.packages.find]
+include = ["briefcase*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
