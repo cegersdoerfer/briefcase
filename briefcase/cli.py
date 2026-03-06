@@ -85,12 +85,31 @@ def remove(
 @app.command()
 def new(
     project_name: str,
-    tool: list[str] = typer.Option(..., help="Tool name(s) to include in the project."),
+    tools: list[str] = typer.Option([], "--tools", help="Tool name(s) to include in the project."),
     layout: Optional[str] = typer.Option(None, "--layout", help="Project layout to use (default: from config or 'default')."),
 ) -> None:
     """Scaffold a new coding-agent project with symlinked tool references."""
+    if not tools:
+        registered = list_tools(home=_home)
+        if not registered:
+            console.print("[red]Error:[/red] No tools registered. Use [bold]briefcase add[/bold] first.")
+            raise typer.Exit(1)
+        from simple_term_menu import TerminalMenu
+        tool_names = [t["name"] for t in registered]
+        menu = TerminalMenu(
+            tool_names,
+            title="Select tools to include (Space to select, Enter to confirm):",
+            multi_select=True,
+            show_multi_select_hint=True,
+        )
+        menu.show()
+        selected = menu.chosen_menu_entries
+        if not selected:
+            console.print("No tools selected. Aborting.")
+            raise typer.Exit(0)
+        tools = list(selected)
     try:
-        project_dir = create_project(project_name, tool, home=_home, layout=layout)
+        project_dir = create_project(project_name, tools, home=_home, layout=layout)
         console.print(f"[green]Created project '{project_name}' at {project_dir}[/green]")
     except (FileExistsError, ValueError) as e:
         console.print(f"[red]Error:[/red] {e}")

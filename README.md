@@ -44,7 +44,13 @@ briefcase update --all
 ### Scaffold a new project
 
 ```
-briefcase new myproject --tool foo --tool bar
+briefcase new myproject --tools foo bar
+```
+
+When `--tools` is omitted, an interactive menu lets you pick from registered tools:
+
+```
+briefcase new myproject
 ```
 
 Creates a project directory with this layout (using the `default` layout):
@@ -67,7 +73,7 @@ The generated `AGENT_CONTEXT.md` and `toolset.yaml` give a coding agent the cont
 The `--layout` flag selects a project layout:
 
 ```
-briefcase new myproject --tool foo --layout minimal
+briefcase new myproject --tools foo --layout minimal
 ```
 
 Built-in layouts:
