@@ -1,10 +1,23 @@
+<p align="center">
+  <img src="assets/briefcase.png" alt="briefcase logo" width="200">
+</p>
+
 # briefcase
 
-A CLI for maintaining a local registry of GitHub repos and scaffolding coding-agent projects that reference them.
+**Pack your agent's briefcase with the right repos before it starts work.**
+
+Coding agents write better code when they can read real examples — but wiring up reference repos for every new project is tedious. Briefcase maintains a local registry of GitHub repos and scaffolds new projects with symlinked references, generated context files, and everything an agent needs to hit the ground running.
 
 ## Install
 
 ```
+pip install agent-briefcase
+```
+
+Or install from source:
+
+```
+git clone https://github.com/cegersdoerfer/briefcase.git
 pip install -e .
 ```
 

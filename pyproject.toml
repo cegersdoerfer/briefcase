@@ -3,9 +3,14 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "briefcase"
-version = "0.1.0"
+name = "agent-briefcase"
+version = "0.1.1"
 description = "CLI tool for maintaining a shared local registry of reusable GitHub repos and scaffolding new coding-agent projects."
+readme = "README.md"
+license = "MIT"
+authors = [
+    {name = "Chris Egersdoerfer"},
+]
 requires-python = ">=3.10"
 dependencies = [
     "typer>=0.9",
