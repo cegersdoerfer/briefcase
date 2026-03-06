@@ -2,11 +2,11 @@
   <img src="assets/briefcase.png" alt="briefcase logo" width="200">
 </p>
 
-# briefcase
+<h1 align="center">briefcase</h1>
 
-**Pack your agent's briefcase with the right repos before it starts work.**
+<p align="center"><strong>Pack your agent's briefcase with the right repos before it starts work.</strong></p>
 
-Coding agents write better code when they can read real examples — but wiring up reference repos for every new project is tedious. Briefcase maintains a local registry of GitHub repos and scaffolds new projects with symlinked references, generated context files, and everything an agent needs to hit the ground running.
+<p align="center">Coding agents write better code when they can read real examples — but wiring up reference repos for every new project is tedious. Briefcase maintains a local registry of GitHub repos and scaffolds new projects with symlinked references, generated context files, and everything an agent needs to hit the ground running.</p>
 
 ## Install
 
