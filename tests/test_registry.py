@@ -1,6 +1,6 @@
 import pytest
 
-from briefcase.registry import add_tool, ensure_dirs, get_tool, list_tools, load_registry
+from briefcase.registry import add_tool, ensure_dirs, get_tool, list_tools, load_registry, remove_tool
 
 
 @pytest.fixture(autouse=True)
@@ -51,3 +51,29 @@ def test_round_trip_preserves_data(home):
     tool = get_tool("x", home=home)
     assert tool["tags"] == ["t1", "t2"]
     assert tool["notes"] == "note"
+
+
+def test_remove_tool(home):
+    add_tool("foo", "https://github.com/org/foo", home=home)
+    # Create a fake repo dir to verify it gets deleted
+    repo_dir = home / "repos" / "foo"
+    repo_dir.mkdir(parents=True, exist_ok=True)
+    (repo_dir / "README.md").write_text("hello")
+
+    remove_tool("foo", home=home)
+
+    assert get_tool("foo", home=home) is None
+    assert not repo_dir.exists()
+
+
+def test_remove_nonexistent_tool_raises(home):
+    with pytest.raises(KeyError, match="not found"):
+        remove_tool("ghost", home=home)
+
+
+def test_subpath_round_trip(home):
+    add_tool("mono", "https://github.com/org/mono", subpath="packages/foo", home=home)
+    tool = get_tool("mono", home=home)
+    assert tool is not None
+    assert tool["subpath"] == "packages/foo"
+    assert tool["local_path"].endswith("mono/packages/foo")

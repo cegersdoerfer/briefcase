@@ -1,5 +1,18 @@
+import re
 import subprocess
 from pathlib import Path
+
+
+def parse_github_url(url: str) -> tuple[str, str | None]:
+    """Parse a GitHub URL, extracting any subpath from /tree/<branch>/... patterns.
+
+    Returns (clone_url, subpath) where subpath is None if no /tree/ pattern found.
+    """
+    m = re.match(r"(https://github\.com/[^/]+/[^/]+)/tree/[^/]+(?:/(.+))?", url)
+    if m:
+        subpath = m.group(2).rstrip("/") if m.group(2) else None
+        return m.group(1), subpath
+    return url, None
 
 
 def clone_repo(url: str, dest_path: Path) -> None:

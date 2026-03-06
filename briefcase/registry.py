@@ -1,4 +1,5 @@
 import os
+import shutil
 from pathlib import Path
 
 import yaml
@@ -42,21 +43,37 @@ def save_registry(data: dict, home: Path | None = None) -> None:
     registry_file.write_text(yaml.dump(data, default_flow_style=False, sort_keys=False))
 
 
-def add_tool(name: str, repo_url: str, notes: str | None = None, tags: list[str] | None = None, home: Path | None = None) -> None:
+def add_tool(name: str, repo_url: str, notes: str | None = None, tags: list[str] | None = None, subpath: str | None = None, home: Path | None = None) -> None:
     _, repos, _ = get_paths(home)
     registry = load_registry(home)
     if name in registry:
         raise ValueError(f"Tool '{name}' already exists in registry.")
+    local_path = repos / name / subpath if subpath else repos / name
     entry = {
         "repo_url": repo_url,
-        "local_path": str(repos / name),
+        "local_path": str(local_path),
     }
     if notes:
         entry["notes"] = notes
     if tags:
         entry["tags"] = tags
+    if subpath:
+        entry["subpath"] = subpath
     registry[name] = entry
     save_registry(registry, home)
+
+
+def remove_tool(name: str, home: Path | None = None) -> None:
+    """Remove a tool from the registry and delete its cloned repo directory."""
+    _, repos, _ = get_paths(home)
+    registry = load_registry(home)
+    if name not in registry:
+        raise KeyError(f"Tool '{name}' not found in registry.")
+    registry.pop(name)
+    save_registry(registry, home)
+    repo_dir = repos / name
+    if repo_dir.exists():
+        shutil.rmtree(repo_dir)
 
 
 def get_tool(name: str, home: Path | None = None) -> dict | None:
