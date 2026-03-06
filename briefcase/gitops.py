@@ -4,11 +4,11 @@ from pathlib import Path
 
 
 def parse_github_url(url: str) -> tuple[str, str | None]:
-    """Parse a GitHub URL, extracting any subpath from /tree/<branch>/... patterns.
+    """Parse a GitHub URL, extracting any subpath from /tree/ or /blob/<branch>/... patterns.
 
-    Returns (clone_url, subpath) where subpath is None if no /tree/ pattern found.
+    Returns (clone_url, subpath) where subpath is None if no /tree/ or /blob/ pattern found.
     """
-    m = re.match(r"(https://github\.com/[^/]+/[^/]+)/tree/[^/]+(?:/(.+))?", url)
+    m = re.match(r"(https://github\.com/[^/]+/[^/]+)/(?:tree|blob)/[^/]+(?:/(.+))?", url)
     if m:
         subpath = m.group(2).rstrip("/") if m.group(2) else None
         return m.group(1), subpath

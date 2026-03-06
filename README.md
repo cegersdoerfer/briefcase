@@ -31,6 +31,13 @@ Requires Python 3.10+ and git.
 briefcase add <name> <repo-url>
 ```
 
+GitHub `/tree/` and `/blob/` URLs are supported to reference a subdirectory or individual file within a repo:
+
+```
+briefcase add pi-src https://github.com/badlogic/pi-mono/tree/main/packages/agent/src
+briefcase add pi-agent-loop https://github.com/badlogic/pi-mono/blob/main/packages/agent/src/agent-loop.ts
+```
+
 Clones the repo into `~/.briefcase/repos/<name>` and records it in the registry.
 
 ### List registered repos

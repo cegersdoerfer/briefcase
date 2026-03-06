@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agent-briefcase"
-version = "0.1.1"
+version = "0.1.2"
 description = "CLI tool for maintaining a shared local registry of reusable GitHub repos and scaffolding new coding-agent projects."
 readme = "README.md"
 license = "MIT"
