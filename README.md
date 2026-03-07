@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/briefcase.png" alt="briefcase logo" width="200">
+  <img src="assets/briefcase.png" alt="briefcase logo" width="400">
 </p>
 
 <h1 align="center">briefcase</h1>
